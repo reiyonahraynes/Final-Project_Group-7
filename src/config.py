@@ -21,3 +21,9 @@ PRICE_RENAME = {
     "month": "date",
     "farmgate_price_php_kg": "price"
 }
+
+VOLUME_RAW_SCHEMA = list(VOLUME_RENAME.keys())
+PRICE_RAW_SCHEMA = list(PRICE_RENAME.keys())
+
+ANOMALY_Z_THRESHOLD = 2.5
+RANDOM_SEED = 0
