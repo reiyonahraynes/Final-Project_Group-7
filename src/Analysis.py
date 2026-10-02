@@ -90,14 +90,13 @@ def build_price_cube(df, value=config.PRICE_COL):
 def zscore_along(cube, axis=-1):
     
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category=RuntimeWarning)  # all-NaN slices give a warning
+        warnings.simplefilter("ignore", category=RuntimeWarning)  
         mean = np.nanmean(cube, axis=axis, keepdims=True)
         std = np.nanstd(cube, axis=axis, keepdims=True)
     return (cube - mean) / np.where(std > 0, std, np.inf)
 
 
 def zscore_loop(cube):
-    """Slow version with normal python loops. Used to check that zscore_along is right."""
     out = np.full(cube.shape, np.nan)
     for i in range(cube.shape[0]):
         for j in range(cube.shape[1]):
@@ -122,7 +121,6 @@ def flag_price_anomalies(df, threshold=config.ANOMALY_Z_THRESHOLD):
 
 
 def verify_zscore(cube):
-    """True if the numpy z-scores are the same as the loop ones (NaNs in the same places)"""
     return bool(np.allclose(zscore_along(cube), zscore_loop(cube), equal_nan=True))
 
 
@@ -172,9 +170,9 @@ def benchmark_conclusion(bench, actual_series):
         f"All methods matched the loop reference: {all_ok}. At {int(big.n_series):,} series x "
         f"{int(big.n_months)} months NumPy was {big.speedup_vs_loop:,.0f}x faster than the loop. "
         f"This project's real data has {actual_series} region-crop series; even the loop takes about "
-        f"{small.best_s * 1000:.1f} ms for {int(small.n_series)} series, so the optimisation is not needed "
-        "for speed here. It is still warranted as the default because it is shorter, equally readable, "
+        f"{small.best_s * 1000:.1f} ms for {int(small.n_series)} series, so the optimization is not needed "
+        "for speed. It is still needed as the default because it is shorter, equally readable, "
         "and keeps working if the dataset grows to many more regions/crops/markets. "
-        "Limitations: one machine, synthetic normal data, best-of-N wall-clock timing (no memory profiling), "
-        "and a single operation (z-score), so results do not generalise to other computations."
+        "Limitations: one machine, synthetic normal data, best-of-N wall-clock timing, "
+        "and a single operation (z-score), which in turn, results do not generalize to other computations."
     )
