@@ -1,6 +1,9 @@
 
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+
 KEY_COLS = ["region", "crop", "date"]
 VOLUME_COL = "volume"
 PRICE_COL = "price"
